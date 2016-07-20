@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://code.angularjs.org/1.5.0/angular.js"></script>
+  <script src="https://code.angularjs.org/1.5.0/angular-resource.js"></script>
+  <meta charset="UTF-8">
+  <title>Login</title>
+</head>
+<body>
+
+<form action="/Login" method="post">
+  username<br>
+  <input type="text" name="userId" value="TestUser"><br>
+  Last name:<br>
+  <input type="text" name="password" value="password"><br><br>
+  <input type="submit" value="Login">
+</form>
+
+<form action="/Logout" method="post">
+  <input type="submit" value="Logout">
+</form>
+
+<div>
+  <a href="/SecretEcho/Test"><h2>Secret</h2></a>
+</div>
+
+
+<div ng-app="myApp" ng-controller="myCtrl">
+  <label ng-click="click()">Post to get Secrete</label>
+  <h2>{{ postSecrete }} </h2>
+</div>
+
+<script>
+  var app = angular.module('myApp', ['ngResource']);
+
+  app.factory('PostSecrete', function ($resource) {
+        return $resource('/PostSecrete', {}, {
+          query: {method: 'POST', isArray : true}
+        });
+      });
+
+  app.controller('myCtrl', function($scope, PostSecrete) {
+    $scope.postSecrete = "No Secrete";
+
+    $scope.click = function() {
+      PostSecrete.query(function (data) {
+        $scope.postSecrete = data;
+      }, function (error) {
+        $scope.postSecrete = error;
+      })
+    };
+  })
+
+</script>
+
+
+</body>
+</html>
